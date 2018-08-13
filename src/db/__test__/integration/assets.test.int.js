@@ -1,4 +1,4 @@
-const { BigNumber } = require('@waves/data-entities');
+const { BigNumber } = require('@local/data-entities');
 
 const { Nothing } = require('folktale/maybe');
 

@@ -1,4 +1,4 @@
-const { BigNumber } = require('@waves/data-entities');
+const { BigNumber } = require('@local/data-entities');
 
 // const { Nothing } = require('folktale/maybe');
 const pair = require('./mocks/pair');
@@ -22,7 +22,7 @@ const isPair = mx => {
     isBigNumber(mx.first_price) &&
     isBigNumber(mx.last_price) &&
     isBigNumber(mx.volume) &&
-    isBigNumber(mx.volume_waves)
+    isBigNumber(mx.volume_local)
   );
 };
 
@@ -34,7 +34,7 @@ const data = createData({
 describe('Pair data request ', () => {
   it('returns one pair correctly', done => {
     data
-      .get(pair('WAVES', 'BTC'))
+      .get(pair('LOCAL', 'BTC'))
       .run()
       .listen({
         onResolved: maybeX => {
@@ -45,10 +45,10 @@ describe('Pair data request ', () => {
       });
   });
 
-  it('returns array of results on all possible WAVES positions', done => {
+  it('returns array of results on all possible LOCAL positions', done => {
     const pairs = [
-      pair('WAVES', 'BTC'),
-      pair('ETH', 'WAVES'),
+      pair('LOCAL', 'BTC'),
+      pair('ETH', 'LOCAL'),
       pair('ETH', 'BTC'),
       { amountAsset: 'qwe', priceAsset: 'asd' },
     ];

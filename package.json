@@ -1,9 +1,9 @@
 {
   "name": "data-service",
   "version": "0.8.0",
-  "description": "Waves data service",
+  "description": "Local data service",
   "main": "src/index.js",
-  "repository": "git@github.com:wavesplatform/data-service.git",
+  "repository": "git@github.com:localwaves/data-service.git",
   "author": "Dmitry Shuranov <dvshur@gmail.com>",
   "license": "MIT",
   "scripts": {
@@ -24,8 +24,8 @@
   },
   "dependencies": {
     "@koa/cors": "^2.2.1",
-    "@waves/data-entities": "^1.1.0",
-    "@waves/json-bigint": "git+https://github.com/wavesplatform/json-bigint.git",
+    "@local/data-entities": "^1.1.0",
+    "@local/json-bigint": "git+https://github.com/wavesplatform/json-bigint.git",
     "bignumber.js": "^7.0.1",
     "chalk": "^2.3.2",
     "check-env": "^1.3.0",

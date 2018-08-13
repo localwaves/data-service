@@ -1,4 +1,4 @@
-const { BigNumber } = require('@waves/data-entities');
+const { BigNumber } = require('@local/data-entities');
 
 const { Nothing } = require('folktale/maybe');
 const pair = require('../../__test__/mocks/pair');
@@ -18,15 +18,15 @@ const isPair = mx => {
     isBigNumber(mx.first_price) &&
     isBigNumber(mx.last_price) &&
     isBigNumber(mx.volume) &&
-    isBigNumber(mx.volume_waves)
+    isBigNumber(mx.volume_local)
   );
 };
 
 describe('Pair Postgres request ', () => {
   describe('one pair', () => {
-    it('covers case: WAVES — amount asset', done => {
+    it('covers case: LOCAL — amount asset', done => {
       pgAdapter
-        .get(pair('WAVES', 'BTC'))
+        .get(pair('LOCAL', 'BTC'))
         .run()
         .listen({
           onResolved: maybeX => {
@@ -37,9 +37,9 @@ describe('Pair Postgres request ', () => {
         });
     });
 
-    it('covers case: WAVES — price asset', done => {
+    it('covers case: LOCAL — price asset', done => {
       pgAdapter
-        .get(pair('ETH', 'WAVES'))
+        .get(pair('ETH', 'LOCAL'))
         .run()
         .listen({
           onResolved: maybeX => {
@@ -50,7 +50,7 @@ describe('Pair Postgres request ', () => {
         });
     });
 
-    it('covers case: WAVES — neither price nor amount', done => {
+    it('covers case: LOCAL — neither price nor amount', done => {
       pgAdapter
         .get(pair('ETH', 'BTC'))
         .run()
@@ -78,13 +78,13 @@ describe('Pair Postgres request ', () => {
 
   describe('many pairs', () => {
     const pairs = [
-      pair('WAVES', 'BTC'),
-      pair('ETH', 'WAVES'),
+      pair('LOCAL', 'BTC'),
+      pair('ETH', 'LOCAL'),
       pair('ETH', 'BTC'),
       { amountAsset: 'qwe', priceAsset: 'asd' },
     ];
 
-    it('returns array of results on all possible WAVES positions', done => {
+    it('returns array of results on all possible LOCAL positions', done => {
       pgAdapter
         .mget(pairs)
         .run()

@@ -1,4 +1,4 @@
-const { BigNumber } = require('@waves/data-entities');
+const { BigNumber } = require('@local/data-entities');
 const { compose, tail, init, split, map } = require('ramda');
 
 const pgp = require('pg-promise')();

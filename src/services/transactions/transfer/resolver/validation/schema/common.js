@@ -1,5 +1,5 @@
 const Joi = require('joi');
-const { BigNumber } = require('@waves/data-entities');
+const { BigNumber } = require('@local/data-entities');
 
 const hashRegex = /[0-9A-Za-z]+/;
 

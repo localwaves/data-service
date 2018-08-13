@@ -1,5 +1,5 @@
-const JSONBig = require('@waves/json-bigint');
-const { BigNumber } = require('@waves/data-entities');
+const JSONBig = require('@local/json-bigint');
+const { BigNumber } = require('@local/data-entities');
 
 const { map, compose } = require('ramda');
 

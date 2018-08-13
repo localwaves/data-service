@@ -2,7 +2,7 @@ const { curry } = require('ramda');
 
 const { convertPrice, convertAmount } = require('../../../../../utils/satoshi');
 
-const WAVES_DECIMALS = 8;
+const LOCAL_DECIMALS = 8;
 
 /**
  * @typedef {object} PairDbResponse
@@ -12,8 +12,8 @@ const WAVES_DECIMALS = 8;
  * @property {BigNumber} last_price
  * @property {BigNumber} volume
  * @property {BigNumber} volume_price_asset
- * @property {BigNumber} [avg_price_with_waves]
- * @property {BigNumber} [price_asset_with_waves]
+ * @property {BigNumber} [avg_price_with_local]
+ * @property {BigNumber} [price_asset_with_local]
  */
 
 /**
@@ -21,19 +21,19 @@ const WAVES_DECIMALS = 8;
  * @property {BigNumber} first_price
  * @property {BigNumber} last_price
  * @property {BigNumber} volume
- * @property {BigNumber} volume_waves
+ * @property {BigNumber} volume_local
  */
 
 /**
  * DB task returns array of values:
- * [aDecimals, pDecimals, firstPrice, lastPrice, volume, -volumeInPriceAsset, -avgPriceWithWaves]
- * depending on pair (does it have WAVES and if does, in which position)
+ * [aDecimals, pDecimals, firstPrice, lastPrice, volume, -volumeInPriceAsset, -avgPriceWithLocal]
+ * depending on pair (does it have LOCAL and if does, in which position)
  * Possible cases:
- *  1. WAVES — amount asset. Volume in waves = volume
- *  2. WAVES — price asset. Volume in waves = volume_in_price_asset
- *  3. WAVES is not in pair
- *    3a. Correct pair WAVES/priceAsset. Volume in waves = volume_in_price_asset / avg_price to WAVES
- *    3b. Correct pair priceAsset/WAVES. Volume in waves = volume_in_price_asset * avg_price to WAVES
+ *  1. LOCAL — amount asset. Volume in local = volume
+ *  2. LOCAL — price asset. Volume in Local = volume_in_price_asset
+ *  3. LOCAL is not in pair
+ *    3a. Correct pair LOCAL/priceAsset. Volume in local = volume_in_price_asset / avg_price to LOCAL
+ *    3b. Correct pair priceAsset/LOCAL. Volume in local = volume_in_price_asset * avg_price to LOCAL
  * @typedef {function} transformResults
  * @returns PairInfoRaw
  */
@@ -47,7 +47,7 @@ const transformResults = curry(({ amountAsset, priceAsset }, result) => {
     first_price: firstPrice,
     volume,
     volume_price_asset: volumePriceAsset,
-    ...withWaves
+    ...withLocal
   } = result;
 
   const resultCommon = {
@@ -57,50 +57,50 @@ const transformResults = curry(({ amountAsset, priceAsset }, result) => {
   };
 
   switch (true) {
-    case amountAsset === 'WAVES':
+    case amountAsset === 'LOCAL':
       return {
         ...resultCommon,
-        volume_waves: resultCommon.volume,
+        volume_local: resultCommon.volume,
       };
-    case priceAsset === 'WAVES': {
+    case priceAsset === 'LOCAL': {
       return {
         ...resultCommon,
-        volume_waves: convertAmount(WAVES_DECIMALS, volumePriceAsset),
+        volume_local: convertAmount(LOCAL_DECIMALS, volumePriceAsset),
       };
     }
     default: {
       const {
-        avg_price_with_waves: avgPriceWithWaves,
-        price_asset_with_waves: priceAssetWithWaves,
-      } = withWaves;
+        avg_price_with_local: avgPriceWithLocal,
+        price_asset_with_local: priceAssetWithLocal,
+      } = withLocal;
 
-      if (avgPriceWithWaves === null)
+      if (avgPriceWithLocal === null)
         return {
           ...resultCommon,
-          volume_waves: null,
+          volume_local: null,
         };
 
       const volumeConverted = convertAmount(pDecimals, volumePriceAsset);
 
-      if (priceAssetWithWaves === 'WAVES') {
+      if (priceAssetWithLocal === 'LOCAL') {
         const priceConverted = convertPrice(
           pDecimals,
-          WAVES_DECIMALS,
-          avgPriceWithWaves
+          LOCAL_DECIMALS,
+          avgPriceWithLocal
         );
         return {
           ...resultCommon,
-          volume_waves: volumeConverted.multipliedBy(priceConverted),
+          volume_local: volumeConverted.multipliedBy(priceConverted),
         };
       } else {
         const priceConverted = convertPrice(
-          WAVES_DECIMALS,
+          LOCAL_DECIMALS,
           pDecimals,
-          avgPriceWithWaves
+          avgPriceWithLocal
         );
         return {
           ...resultCommon,
-          volume_waves: volumeConverted.dividedBy(priceConverted),
+          volume_local: volumeConverted.dividedBy(priceConverted),
         };
       }
     }

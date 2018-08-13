@@ -1,5 +1,5 @@
 const Joi = require('joi');
-const { BigNumber } = require('@waves/data-entities');
+const { BigNumber } = require('@local/data-entities');
 
 const assetsIdRegex = /[0-9A-Za-z]+/;
 
@@ -22,7 +22,7 @@ const output = Joi.object().keys({
   volume: Joi.object()
     .type(BigNumber)
     .required(),
-  volume_waves: Joi.object()
+  volume_local: Joi.object()
     .type(BigNumber)
     .required()
     .allow(null),
